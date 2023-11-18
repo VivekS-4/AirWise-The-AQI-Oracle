@@ -26,8 +26,23 @@
         <input class="datepicker" type="date" id="datepicker">
         <a class="fetch" href="#">Fetch AQI</a>
     </div>
+<div class = "main-frame">
+    <div class="meter">
+        <div class="container">
+            <div class="gauge" id="g1"><svg viewBox="0 0 60 25"><text x="50%" y="50%">20%</text></svg>
+            </div>
+            <div class="gauge" id="g2"><svg viewBox="0 0 60 25"><text x="50%" y="50%">70%</text></svg></div>
+        </div>
+    </div><br>
+    <div class="bot-b">
+        <div class="container">
+            <div class="bot-bar" id="b1"><svg><text x="50%" y="50%">Air Quality: GOOD!</text></svg></div>
+            <div class="bot-bar" id="b2"><svg><text x="50%" y="50%">Temperature: GOOD!</text></svg></div>
+        </div>
+    </div>
 <!-- <iframe src="{{ url_for('static', filename='html/bg.html') }}" width="100%" height="1000" style="border:none;"></iframe> -->
- <div class="glass" style="border:none;z-index:3">   
+ 
+<div class="glass" style="border:none;z-index:3">   
     <div class="dashboard">
         <div class="box box-1">
             <h2>Weather</h2>
@@ -78,5 +93,6 @@
         </div>
     </div>
     </div>
+</div>
 </body>
 </html>
