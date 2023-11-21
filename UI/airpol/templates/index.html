@@ -1,0 +1,98 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weather & Air Quality Dashboard</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/styles.css') }}">
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+</head>
+<body>  
+    <div class="navbar">
+        <a class="home" href="/">Home</a>
+        <a class="about" href="#">About</a>
+        <div class="dropdown">
+            <button class="dropbtn"><i class="fa fa-caret-down">Select City</i></button>
+            <div class="dropdown-content">
+              <a href="#">Toronto North</a>
+              <a href="#">Toronto West</a>
+              <a href="#">Ottawa</a>
+              <a href="#">Hamilton Mountain</a>
+              <a href="#">Hamilton Downtown</a>
+              <a href="#">Windsor Downtown</a>
+            </div>
+        </div>
+        <input class="datepicker" type="date" id="datepicker">
+        <a class="fetch" href="#">Fetch AQI</a>
+    </div>
+<div class = "main-frame">
+    <div class="meter">
+        <div class="container">
+            <div class="gauge" id="g1"><svg viewBox="0 0 60 25"><text x="50%" y="50%">20%</text></svg>
+            </div>
+            <div class="gauge" id="g2"><svg viewBox="0 0 60 25"><text x="50%" y="50%">70%</text></svg></div>
+        </div>
+    </div><br>
+    <div class="bot-b">
+        <div class="container">
+            <div class="bot-bar" id="b1"><svg><text x="50%" y="50%">Air Quality: GOOD!</text></svg></div>
+            <div class="bot-bar" id="b2"><svg><text x="50%" y="50%">Temperature: GOOD!</text></svg></div>
+        </div>
+    </div>
+<!-- <iframe src="{{ url_for('static', filename='html/bg.html') }}" width="100%" height="1000" style="border:none;"></iframe> -->
+ 
+<div class="glass" style="border:none;z-index:3">   
+    <div class="dashboard">
+        <div class="box box-1">
+            <h2>Weather</h2>
+            <div class="weather-info">
+                <div class="weather-icon">☀️</div>
+                <button onclick="changeRandomWeatherIconAndTemperature()">Change Icon</button>
+                <div class="temperature">23°C</div>
+                <div class="location">Toronto, ON</div>
+                <div class="num">One</div>
+            </div>
+        </div>
+        <div class="box box-2">
+            <h2>Air Quality</h2>
+            <div class="air-quality-info">
+                <div class="air-quality-level">Very Bad</div>
+                <div class="pollution-level">PM2.5: 2000 µg/m³</div>
+                <div class="num">two</div>
+            </div>
+        </div>
+        <div class="box box-3">
+            <h2>Ozone</h2>
+            <p>PM2.5: 20 µg/m³</p>
+            <div class="num">Three</div>
+        </div>
+        <div class="box box-4">
+            <div class ="btn-collection">
+            <button onclick="additional_info()" class = "infobtn" id = "infobtn">Aditional Info</button><br>
+            <button onclick="additional_info()" class = "justbtn" id = "justbtn">How?</button><br>
+            <button onclick="additional_info()" class = "anotherbtn" id = "anotherbtn">Why?</button>
+            </div>
+            <div class="num">Four</div>
+        </div>
+        <div class="box box-5">
+            <h2>Sulpherdioxide</h2>
+            <p>PM2.5: 12452 µg/m³</p>
+            <div class="num">Five</div>
+        </div>
+        <div class="box box-6">
+            <h2>NO2</h2>
+            <p>PM2.5: 12452 µg/m³</p>
+            <div class="num">Six</div>
+        </div>
+        
+        <div class="box box-7">
+            <h2>Additional Information</h2>
+            <p style="font-size: x-large; font-weight: bolder;" >Stay Inside, outside Tempratures are not suitable for Human Habbitate</p>
+            <div class="num">Seven</div>
+        </div>
+    </div>
+    </div>
+</div>
+</body>
+</html>
