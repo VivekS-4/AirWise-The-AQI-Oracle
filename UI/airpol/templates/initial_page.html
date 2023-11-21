@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="stylesheet" type="text/css" href="/styles.css">
+</head>
+<style>
+	    body {
+		background-color: black;
+        /* background-image: url('/static/images/bgimg.jpg'); */
+        background-size: cover;
+        margin: 0;
+        padding: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+        /* background: linear-gradient(-45deg, #ffe2d3, #a6dee2, #cfc2fc); */
+    }
+
+
+    .glass {
+        position: relative;
+        background: inherit;
+        overflow: hidden;
+        width: fit-content;
+        height: fit-content;
+        border-radius: 16px;
+        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3), 
+                    0 6px 20px rgba(0, 0, 0, 0.15);
+        z-index: 1;
+        transition: 1s ease;
+		grid-row: 1 / 2;
+		grid-column: 1 / 2;
+    }
+    
+    .glass:before {
+        content: '';
+        position: absolute;
+        background: inherit;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        margin: -20px;
+        box-shadow: inset 0 0 500px rgba(204, 198, 198, 0.4); 
+        filter: blur(10%);
+        z-index: -1;
+    }
+
+    .dashboard {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        grid-template-rows: auto;
+        gap: 20px;
+        max-width: fit-content;
+        padding: 20px;
+        justify-content: center;
+        max-height: fit-content;
+    }
+
+
+    .box{
+        padding: 20px;
+        background-image: linear-gradient(-45deg, #ffe2d3, #a6dee2, #cfc2fc);
+        box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+        border-radius: 20px;
+		width: 250px;
+		height: 300px;
+	}
+
+
+    .box-1 {
+        grid-column: 1 / 1;
+        grid-row: 1 / 3;
+        width: 250px;
+    }
+
+    .box-2 {
+        grid-column: 2 / 2;
+        grid-row: 1 / 2;
+        width: 250px;
+    }
+
+    .box-3 {
+        grid-column: 2 / 4; /* Expanded to two columns */
+        grid-row: 2 / 3; /* Placed below Box 1 and Box 2 */
+        width: 560px;
+    }
+
+    .box-4 {
+        grid-column: 3 / 3;
+        grid-row: 1 / 2; /* Expanded to two rows and placed to the right of Box 3 */
+        width: 250px;
+    }
+
+    .box-5{
+        grid-column: 4 / 4;
+        grid-row: 1 / 3;
+        width: 250px;
+    }
+    .box-6{
+        grid-column: 1 / 5;
+        grid-row: 3 / 4;
+        height: 140px;
+
+    }
+
+    
+
+    h2 {
+        margin: 0;
+    }
+
+    .weather-icon {
+        font-size: 2rem;
+    }
+
+    .temperature {
+        font-size: 1.5rem;
+        font-weight: bold;
+    }
+
+    .location {
+        color: #888;
+    }
+
+    .air-quality-level {
+        font-size: 1.5rem;
+        font-weight: bold;
+    }
+
+    .pollution-level {
+        color: #888;
+    }
+
+    p {
+        margin: 0;
+    }
+
+:root{
+    --distance: 0px;
+    --speed: 1s;
+}
+@keyframes motion{
+    0%{
+        transform: rotate(360deg) translateX(var(--distance));
+    }
+    100%{
+        transform: rotate(0deg) translateX(var(--distance));
+    }
+}
+@keyframes glow {
+    0%{
+        box-shadow: 0 0 0 3px rgb(255, 131, 23), 0 0 0 5px rgb(255, 140, 40);
+        transform: rotate(360deg);
+    }
+    50%{
+        box-shadow: 0 0 0 5px rgb(255, 140, 40),
+                0 0 0 12px rgb(255, 165, 80),
+                0 0 0 21px rgb(255, 200, 160),
+                0 0 0 38px rgb(255, 222, 212),
+                0 0 0 50px rgb(255, 242, 238)
+    }
+    60%{
+        box-shadow: 0 0 0 5px rgb(255, 140, 40),
+                0 0 0 12px rgb(255, 165, 80),
+                0 0 0 21px rgb(255, 200, 160),
+                0 0 0 38px rgb(255, 222, 212),
+                0 0 0 50px rgb(255, 242, 238)
+    }
+    100%{
+        box-shadow: 0 0 0 3px rgb(255, 131, 23), 0 0 0 5px rgb(255, 140, 40);
+        transform: rotate(0);
+    } 
+}
+.solar{
+    background: black;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin:0;
+    overflow: hidden;
+	z-index: -2;
+	grid-row: 1 / 2;
+	grid-column: 1 / 2;
+}
+div{    
+    border-radius: 50%;
+}
+.sun{
+    height: 50px;
+    width: 50px;
+    background: rgb(255, 105, 0);
+    position: absolute;
+    animation: glow 5s ease-in-out infinite;
+}
+.planet{
+    position: absolute;
+    transform: rotate(0deg) translateX(var(--distance));
+    animation: motion linear var(--speed) infinite;
+}
+.mercury{
+    --speed: 2.41s;
+    --distance: 38.7px;
+    height: 5px;
+    width: 5px;
+    background: rgb(133, 10, 10);
+}
+.venus{
+    --speed: 6.15s;
+    --distance: 72.3px;
+    height: 12px;
+    width: 12px;
+    background: rgb(224, 133, 67);
+}
+.earth{
+    --speed: 10s;
+    --distance: 100px;
+    height: 15px;
+    width: 15px;
+    background: rgb(25, 44, 255);
+}
+.mars{
+    --speed: 18.8s;
+    --distance: 152px;
+    height: 8px;
+    width: 8px;
+    background: rgb(218, 81, 39);
+}
+.jupiter{
+    --speed: 119s;
+    /*--distance: 520px; */
+    --distance: 250px;
+
+    height: 75px;
+    width: 75px;
+    background: rgb(213, 178, 152);
+   box-shadow: 0 0 0 5px white,
+        0 0 0 7px rgba(213, 178, 152, 0.869),
+        0 0 0 12px white,
+        0 0 0 22px rgba(213, 178, 152, 0.273),
+        0 0 0 24px white,
+        0 0 0 34px rgba(213, 178, 152, 0.23);
+
+}
+.saturn{
+    --speed: 294s;
+    /* --distance: 957px; */
+    --distance: 450px;
+
+    width: 65px;
+    height: 65px;
+    background: rgb(214, 145, 96);
+    box-shadow: 0 0 0 3px rgb(255, 255, 255),
+                0 0 0 17px rgba(209, 177, 152, 0.304),
+                0 0 0 13px rgb(255, 255, 255),
+                0 0 0 30px rgba(185, 111, 54, 0.335),
+                0 0 0 33px rgb(255, 255, 255),
+                0 0 0 40px rgba(209, 177, 152, 0.261),
+                0 0 0 38px rgb(255, 255, 255),
+                0 0 0 41px rgba(185, 111, 54, 0.335)
+}
+.uranus{
+    --speed: 837s;
+    /* --distance: 1917px; */
+    --distance: 680px;
+
+    height: 40.1px;
+    width: 40.1px;
+    background: rgb(165, 176, 192);
+    box-shadow: 0 0 0 7px rgb(255, 255, 255),
+                0 0 0 8px rgba(112, 67, 227, 0.53),
+                0 0 0 8.5px rgb(255, 255, 255),
+                0 0 0 10.5px rgba(37, 42, 192, 0.279)
+}
+.neptune{
+    --speed: 1637s;
+    /* --distance: 3018px; */
+    --distance: 780px;
+
+    height: 30px;
+    width: 30px;
+    background: rgb(49, 91, 191);
+    box-shadow: 0 0 0 7px rgb(255, 255, 255),
+                0 0 0 7.8px rgba(112, 67, 227, 0.53),
+                0 0 0 11px rgb(255, 255, 255),
+                0 0 0 11.8px rgba(37, 42, 192, 0.279),
+                0 0 0 15px rgb(255, 255, 255),
+                0 0 0 15.8px rgba(37, 42, 192, 0.279)
+}
+.pluto{
+    --speed: 2479s;
+    /* --distance: 3948px; */
+    --distance: 850px;
+
+    height: 1.87px;
+    width: 1.87px;
+    background: rgb(111, 109, 108);
+}
+.main{
+	justify-content: center;
+}
+/* Define the styles for the progress bar container */
+.progress-container {
+            position: fixed;
+            bottom: 10%;
+            left: 0;
+            width: 100%;
+            height: 8px;
+            background-color: #f0f0f0;
+            z-index: 9999; /* Make sure the progress bar is on top of everything */
+        }
+
+        /* Define the styles for the progress bar itself */
+        .progress-bar {
+            height: 7px;
+            background-color: #0077FF; /* Set your desired progress bar color */
+            width: 0; /* The width will be dynamically updated to show progress */
+        }
+
+        /* Define styles for the welcome message */
+        .welcome-message {
+            position: fixed;
+            top: 15%;
+            left: 50%;
+            height: fit-content;
+            width: fit-content;
+            border-radius: 10px;
+            background-color: whitesmoke;
+            transform: translate(-50%, -50%);
+            font-size: 50px;
+            display: none; /* Initially hidden */
+        }
+        html, body {
+            overflow: hidden;
+        }
+</style>
+    
+<script>
+    // Wait for the page to load before starting the progress bar
+    document.addEventListener("DOMContentLoaded", function() {
+        startProgress();
+    });
+
+    function startProgress() {
+        // Simulate progress by increasing the width of the progress bar over time
+        let progressBar = document.getElementById("myProgressBar");
+        let welcomeMessage = document.getElementById("welcomeMessage");
+
+        let width = 0;
+        const interval = setInterval(function () {
+            if (width >= 100) {
+                clearInterval(interval);
+                // Show the "Welcome" message and initiate the page transition
+                welcomeMessage.style.display = "block";
+                setTimeout(loadNewPage, 1000);
+            } else {
+                width++;
+                progressBar.style.width = width + "%";
+            }
+        }, 50); // Adjust the interval to control the speed of the progress
+
+        function loadNewPage() {
+        // Perform a zooming and fading animation for the page transition
+        document.body.style.transition = "transform 1s, opacity 1s";
+        document.body.style.transform = "scale(2)";
+        document.body.style.opacity = 0;
+        setTimeout(function () {
+            // Redirect to the index page route in Flask after the animation
+            window.location.href = "{{ url_for('index') }}";
+        }, 1000);
+    }
+    }
+</script>
+<body>
+	<div class="main">
+	<div class = "solar">
+		<div class="sun"></div>
+    	<div class="planet mercury"></div>
+    	<div class="planet venus"></div>
+    	<div class="planet earth"></div>
+    	<div class="planet mars"></div>
+    	<div class="planet jupiter"></div>
+    	<div class="planet saturn"></div>
+    	<div class="planet uranus"></div>
+    	<div class="planet neptune"></div>
+    	<div class="planet pluto"></div>
+	</div>	
+    <div class="progress-container">
+        <div class="progress-bar" id="myProgressBar"></div>
+    </div>
+    <div><div class="welcome-message" id="welcomeMessage">Welcome</div></div>
+    
+
+</body>
+</html>
