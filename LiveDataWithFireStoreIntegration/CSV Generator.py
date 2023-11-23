@@ -2,8 +2,32 @@ import firebase_admin
 from firebase_admin import credentials
 from firebase_admin import firestore
 import csv
-from datetime import datetime
+from datetime import datetime, timedelta
 import os
+import time
+
+start_time = time.time()
+
+
+def read_last_execution_date():
+  try:
+    with open('last_execution_date.txt', 'r') as file:
+      return file.read().strip()
+  except FileNotFoundError:
+    return None
+
+
+def write_last_execution_date():
+  with open('last_execution_date.txt', 'w') as file:
+    file.write(datetime.now().strftime('%Y-%m-%d'))
+
+
+last_execution_date = read_last_execution_date()
+current_date = datetime.now().strftime('%Y-%m-%d')
+
+if last_execution_date == current_date:
+  print("Script has already been executed today. Exiting.")
+  exit()
 
 cred = credentials.Certificate({
     "type":
@@ -35,9 +59,7 @@ firebase_admin.initialize_app(cred)
 db = firestore.client()
 collection_ref = db.collection('hourlyData')
 
-current_date = datetime.now().strftime('%Y-%m-%d')
 csv_file_name = f'firestore_{current_date}.csv'
-
 header = [
     'Document ID', 'date', 'time', 'name', 'country', 'latitude', 'longitude',
     'temperature_c', 'temperature_f', 'condition', 'wind_speed_kph',
@@ -45,13 +67,13 @@ header = [
     'precipitation_mm', 'humidity', 'visibility_km', 'uv_index', 'cloud_cover',
     'o3', 'co', 'no2', 'so2', 'pm2_5', 'pm10', 'gb_defra_index', 'us_epa_index'
 ]
-
 csv_file = open(csv_file_name, 'w', newline='')
 csv_writer = csv.writer(csv_file)
-
 csv_writer.writerow(header)
 
 docs = collection_ref.stream()
+
+rec_count = 0
 
 for doc in docs:
   doc_data = doc.to_dict()
@@ -85,9 +107,13 @@ for doc in docs:
       doc_data.get('gb_defra_index', ''),
       doc_data.get('us_epa_index', '')
   ]
-
   csv_writer.writerow(row)
+  rec_count += 1
 
 csv_file.close()
 
-print(f"Data exported to '{csv_file_name}'")
+write_last_execution_date()
+
+end_time = time.time()
+ttl = round(end_time - start_time, 2)
+print(f'{rec_count} records exported to {csv_file_name} in {ttl} seconds')

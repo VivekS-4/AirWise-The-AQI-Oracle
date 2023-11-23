@@ -1,5 +1,4 @@
 import requests
-import json
 from datetime import datetime
 import firebase_admin
 from firebase_admin import credentials
@@ -7,8 +6,7 @@ from firebase_admin import firestore
 from flask import Flask
 import os
 
-my_secret = os.environ['api_key']
-
+apikey = os.environ['api_key']
 cred = credentials.Certificate({
     "type":
     "service_account",
@@ -48,8 +46,9 @@ def get_air():
   with open('city_zip.txt', 'r') as file:
     for line in file:
       city_names.append(line.strip())
+  count = 0
   for location in city_names:
-    params = {"key": my_secret, "q": location, "aqi": aqi}
+    params = {"key": apikey, "q": location, "aqi": aqi}
 
     try:
       response = requests.get(api_url, params=params)
@@ -80,52 +79,51 @@ def get_air():
         vis_km = current['vis_km']
         uv = current['uv']
         gust_kph = current['gust_kph']
+
         air_quality = current['air_quality']
-        co = air_quality['co']
-        no2 = air_quality['no2']
-        o3 = air_quality['o3']
-        so2 = air_quality['so2']
-        pm2_5 = air_quality['pm2_5']
-        pm10 = air_quality['pm10']
-        us_epa_index = air_quality['us-epa-index']
-        gb_defra_index = air_quality['gb-defra-index']
-
-        extracted_data = {
-            "name": convert_to_lower_no_spaces(name),
-            "country": convert_to_lower_no_spaces(country),
-            "latitude": lat,
-            "longitude": lon,
-            "date": date,
-            "time": time,
-            "temperature_c": temp_c,
-            "temperature_f": temp_f,
-            "condition": convert_to_lower_no_spaces(condition_text),
-            "wind_speed_kph": wind_kph,
-            "wind_degree": wind_degree,
-            "wind_direction": convert_to_lower_no_spaces(wind_dir),
-            "pressure_mb": pressure_mb,
-            "precipitation_mm": precip_mm,
-            "humidity": humidity,
-            "cloud_cover": cloud,
-            "visibility_km": vis_km,
-            "uv_index": uv,
-            "gust_speed_kph": gust_kph,
-            "co": co,
-            "no2": no2,
-            "o3": o3,
-            "so2": so2,
-            "pm2_5": pm2_5,
-            "pm10": pm10,
-            "us_epa_index": us_epa_index,
-            "gb_defra_index": gb_defra_index
-        }
-
-        extracted_data_json = json.dumps(extracted_data, indent=4)
-
-        db = firestore.client()
-        doc_ref = db.collection('hourlyData').document()
-        doc_ref.set(extracted_data)
-        print("Document ID:", doc_ref.id, "@ Time: ", time)
+        if air_quality != {}:
+          count += 1
+          co = air_quality['co']
+          no2 = air_quality['no2']
+          o3 = air_quality['o3']
+          so2 = air_quality['so2']
+          pm2_5 = air_quality['pm2_5']
+          pm10 = air_quality['pm10']
+          us_epa_index = air_quality['us-epa-index']
+          gb_defra_index = air_quality['gb-defra-index']
+          extracted_data = {
+              "name": convert_to_lower_no_spaces(name),
+              "country": convert_to_lower_no_spaces(country),
+              "latitude": lat,
+              "longitude": lon,
+              "date": date,
+              "time": time,
+              "temperature_c": temp_c,
+              "temperature_f": temp_f,
+              "condition": convert_to_lower_no_spaces(condition_text),
+              "wind_speed_kph": wind_kph,
+              "wind_degree": wind_degree,
+              "wind_direction": convert_to_lower_no_spaces(wind_dir),
+              "pressure_mb": pressure_mb,
+              "precipitation_mm": precip_mm,
+              "humidity": humidity,
+              "cloud_cover": cloud,
+              "visibility_km": vis_km,
+              "uv_index": uv,
+              "gust_speed_kph": gust_kph,
+              "co": co,
+              "no2": no2,
+              "o3": o3,
+              "so2": so2,
+              "pm2_5": pm2_5,
+              "pm10": pm10,
+              "us_epa_index": us_epa_index,
+              "gb_defra_index": gb_defra_index
+          }
+          db = firestore.client()
+          doc_ref = db.collection('hourlyData').document()
+          doc_ref.set(extracted_data)
+          print(name, " Document ID:", doc_ref.id, "@ Time: ", time)
 
       else:
         print(
@@ -134,6 +132,8 @@ def get_air():
     except requests.RequestException as e:
       print(f"Request for {location} failed: {e}")
 
+  print(f"{count} locations processed")
+
 
 app = Flask(__name__)
 
@@ -141,7 +141,7 @@ app = Flask(__name__)
 @app.route('/')
 def hello():
   get_air()
-  return 'Hello, World!'
+  return 'Storing Records!'
 
 
 app.run(host='0.0.0.0')
