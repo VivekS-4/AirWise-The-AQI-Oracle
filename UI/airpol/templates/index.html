@@ -10,21 +10,22 @@
 </head>
 <body>  
     <div class="navbar">
-        <a class="home" href="/">Home</a>
+        <a class="home" id="home" href="/">Home</a>
         <a class="about" href="#">About</a>
-        <div class="dropdown">
-            <button class="dropbtn"><i class="fa fa-caret-down">Select City</i></button>
-            <div class="dropdown-content">
-              <a href="#">Toronto North</a>
-              <a href="#">Toronto West</a>
-              <a href="#">Ottawa</a>
-              <a href="#">Hamilton Mountain</a>
-              <a href="#">Hamilton Downtown</a>
-              <a href="#">Windsor Downtown</a>
-            </div>
-        </div>
-        <input class="datepicker" type="date" id="datepicker">
-        <a class="fetch" href="#">Fetch AQI</a>
+        
+        <select id="cityDropdown" name="cityName">
+          <option value="" disabled selected>Select a city</option>
+          <option value="Toronto North">Toronto North</option>
+          <option value="Toronto West">Toronto West</option>
+          <option value="Ottawa">Ottawa</option>
+          <option value="Hamilton Mountain">Hamilton Mountain</option>
+          <option value="Hamilton Downtown">Hamilton Downtown</option>
+          <option value="Windsor Downtown">Windsor Downtown</option>
+          <!-- Add more options as needed -->
+        </select>
+        <input class="datepicker" type="date" id="dpicker">
+        <input class="search" type="search" id="search" placeholder="Search"> 
+        <button class="fetch" id="fetch" onclick="get_input()">Fetch AQI</button>
     </div>
 <div class = "main-frame">
     <div class="meter">
@@ -94,5 +95,15 @@
     </div>
     </div>
 </div>
+<script>
+    function get_input() {
+        const selectedDate = document.getElementById("dpicker").value;
+        const cityName = document.getElementById("cityDropdown").value;
+        
+        // CONSOLE LOG
+        console.log("Selected Date:", selectedDate);
+        console.log("City Name:", cityName);
+    }
+</script>
 </body>
 </html>

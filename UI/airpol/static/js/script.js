@@ -45,3 +45,4 @@ function changeRandomWeatherIconAndTemperature() {
     // Set the content of the "temperature" element to the random temperature
     temperatureElement.textContent = randomTemp + "°C";
 }
+
