@@ -45,3 +45,7 @@ function changeRandomWeatherIconAndTemperature() {
     // Set the content of the "temperature" element to the random temperature
     temperatureElement.textContent = randomTemp + "°C";
 }
+
+// Assuming yourVariable1 and yourVariable2 contain the new percentage values you want to set for g1 and g2 respectively
+
+
