@@ -1,10 +1,13 @@
 import requests
 from datetime import datetime
 import firebase_admin
-from firebase_admin import credentials
-from firebase_admin import firestore
+from firebase_admin import credentials, firestore
 from flask import Flask
 import os
+import logging
+
+# Configure logging
+logging.basicConfig(filename='app.log', level=logging.ERROR)
 
 apikey = os.environ['api_key']
 cred = credentials.Certificate({
@@ -43,96 +46,101 @@ def get_air():
   api_url = "http://api.weatherapi.com/v1/current.json"
   aqi = "yes"
   city_names = []
-  with open('city_zip.txt', 'r') as file:
-    for line in file:
-      city_names.append(line.strip())
-  count = 0
-  for location in city_names:
-    params = {"key": apikey, "q": location, "aqi": aqi}
 
-    try:
-      response = requests.get(api_url, params=params)
+  try:
+    with open('city_zip.txt', 'r') as file:
+      for line in file:
+        city_names.append(line.strip())
 
-      if response.status_code == 200:
-        data = response.json()
+    count = 0
+    for location in city_names:
+      params = {"key": apikey, "q": location, "aqi": aqi}
 
-        location = data['location']
-        current = data['current']
-        name = location['name']
-        country = location['country']
-        lon = location['lon']
-        lat = location['lat']
-        localtime = location['localtime']
-        localtime_datetime = datetime.strptime(localtime, "%Y-%m-%d %H:%M")
-        date = localtime_datetime.strftime("%Y-%m-%d")
-        time = localtime_datetime.strftime("%H:%M")
-        temp_c = current['temp_c']
-        temp_f = current['temp_f']
-        condition_text = current['condition']['text']
-        wind_kph = current['wind_kph']
-        wind_degree = current['wind_degree']
-        wind_dir = current['wind_dir']
-        pressure_mb = current['pressure_mb']
-        precip_mm = current['precip_mm']
-        humidity = current['humidity']
-        cloud = current['cloud']
-        vis_km = current['vis_km']
-        uv = current['uv']
-        gust_kph = current['gust_kph']
+      try:
+        response = requests.get(api_url, params=params)
 
-        air_quality = current['air_quality']
-        if air_quality != {}:
-          count += 1
-          co = air_quality['co']
-          no2 = air_quality['no2']
-          o3 = air_quality['o3']
-          so2 = air_quality['so2']
-          pm2_5 = air_quality['pm2_5']
-          pm10 = air_quality['pm10']
-          us_epa_index = air_quality['us-epa-index']
-          gb_defra_index = air_quality['gb-defra-index']
-          extracted_data = {
-              "name": convert_to_lower_no_spaces(name),
-              "country": convert_to_lower_no_spaces(country),
-              "latitude": lat,
-              "longitude": lon,
-              "date": date,
-              "time": time,
-              "temperature_c": temp_c,
-              "temperature_f": temp_f,
-              "condition": convert_to_lower_no_spaces(condition_text),
-              "wind_speed_kph": wind_kph,
-              "wind_degree": wind_degree,
-              "wind_direction": convert_to_lower_no_spaces(wind_dir),
-              "pressure_mb": pressure_mb,
-              "precipitation_mm": precip_mm,
-              "humidity": humidity,
-              "cloud_cover": cloud,
-              "visibility_km": vis_km,
-              "uv_index": uv,
-              "gust_speed_kph": gust_kph,
-              "co": co,
-              "no2": no2,
-              "o3": o3,
-              "so2": so2,
-              "pm2_5": pm2_5,
-              "pm10": pm10,
-              "us_epa_index": us_epa_index,
-              "gb_defra_index": gb_defra_index
-          }
-          db = firestore.client()
-          doc_ref = db.collection('hourlyData').document()
-          doc_ref.set(extracted_data)
-          print(name, " Document ID:", doc_ref.id, "@ Time: ", time)
+        if response.status_code == 200:
+          data = response.json()
 
-      else:
-        print(
-            f"Request for {location} failed with status code: {response.status_code}"
-        )
-    except requests.RequestException as e:
-      print(f"Request for {location} failed: {e}")
+          location = data['location']
+          current = data['current']
+          name = location['name']
+          country = location['country']
+          lon = location['lon']
+          lat = location['lat']
+          localtime = location['localtime']
+          localtime_datetime = datetime.strptime(localtime, "%Y-%m-%d %H:%M")
+          date = localtime_datetime.strftime("%Y-%m-%d")
+          time = localtime_datetime.strftime("%H:%M")
+          temp_c = current['temp_c']
+          temp_f = current['temp_f']
+          condition_text = current['condition']['text']
+          wind_kph = current['wind_kph']
+          wind_degree = current['wind_degree']
+          wind_dir = current['wind_dir']
+          pressure_mb = current['pressure_mb']
+          precip_mm = current['precip_mm']
+          humidity = current['humidity']
+          cloud = current['cloud']
+          vis_km = current['vis_km']
+          uv = current['uv']
+          gust_kph = current['gust_kph']
 
-  print(f"{count} locations processed")
+          air_quality = current['air_quality']
+          if air_quality != {}:
+            count += 1
+            co = air_quality['co']
+            no2 = air_quality['no2']
+            o3 = air_quality['o3']
+            so2 = air_quality['so2']
+            pm2_5 = air_quality['pm2_5']
+            pm10 = air_quality['pm10']
+            us_epa_index = air_quality['us-epa-index']
+            gb_defra_index = air_quality['gb-defra-index']
+            extracted_data = {
+                "name": convert_to_lower_no_spaces(name),
+                "country": convert_to_lower_no_spaces(country),
+                "latitude": lat,
+                "longitude": lon,
+                "date": date,
+                "time": time,
+                "temperature_c": temp_c,
+                "temperature_f": temp_f,
+                "condition": convert_to_lower_no_spaces(condition_text),
+                "wind_speed_kph": wind_kph,
+                "wind_degree": wind_degree,
+                "wind_direction": convert_to_lower_no_spaces(wind_dir),
+                "pressure_mb": pressure_mb,
+                "precipitation_mm": precip_mm,
+                "humidity": humidity,
+                "cloud_cover": cloud,
+                "visibility_km": vis_km,
+                "uv_index": uv,
+                "gust_speed_kph": gust_kph,
+                "co": co,
+                "no2": no2,
+                "o3": o3,
+                "so2": so2,
+                "pm2_5": pm2_5,
+                "pm10": pm10,
+                "us_epa_index": us_epa_index,
+                "gb_defra_index": gb_defra_index
+            }
+            db = firestore.client()
+            doc_ref = db.collection('hourlyData').document()
+            doc_ref.set(extracted_data)
+            print(name, " Document ID:", doc_ref.id, "@ Time: ", time)
+
+        else:
+          logging.error(
+              f"Request for {location} failed with status code: {response.status_code}"
+          )
+      except requests.RequestException as e:
+        logging.error(f"Request for {location} failed: {e}")
+
+    print(f"{count} locations processed")
+  except Exception as ex:
+    logging.error(f"An error occurred: {ex}")
 
 
 app = Flask(__name__)
@@ -144,4 +152,5 @@ def hello():
   return 'Storing Records!'
 
 
-app.run(host='0.0.0.0')
+if __name__ == '__main__':
+  app.run(host='0.0.0.0')
