@@ -11,7 +11,7 @@ body {
 }
 
 /* iframe { position: absolute; float: left; clear: both; z-index: 0; left: no-repeat; } */
- /* Style the navigation bar */
+
  div{
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
  }
@@ -195,8 +195,8 @@ select{
     --fill-color:var(--green);
     /*--fill-percentage: 50;*/
     
-    --background-color: white;
-    --gauge-background-color:#333;
+    --background-color: rgba(48, 45, 45, 1);
+    --gauge-background-color:#244;
   
     --lightgreen-deg:70deg;
     --yellow-deg:60deg;
@@ -260,26 +260,31 @@ select{
     margin-left: auto;
     margin-right: auto;
     border-radius: 20px;
-    background: rgba(238, 162, 117, 0.5);
+    background: rgba(48, 45, 45, 0.6);
 }
-.bot-bar > svg > text {
+.bot-bar > text {
   text-anchor:middle;
   font-size: larger;
 }
 #b1{
-
+  color: antiquewhite;
+  text-align: center;
+  height: 100px;
   margin-left: auto;
   margin-right: auto;
-  /* background: rgba(238, 162, 117, 0.5); */
+  width: 50%;
+  /* background: rgb(32, 18, 9); */
 }
 
 #b2{
-  
+  color: antiquewhite;
+  text-align: center;
   margin-left: auto;
   margin-right: auto;
-  /* background: rgba(238, 162, 117, 0.5); */
+  width: 50%;
+  overflow-wrap: break-word;
+  /* background: rgba(238, 162, 117, 1);  */
 }
-/* ... (your existing styles) ... */
 
 .glass {
   position: relative;
@@ -333,7 +338,6 @@ color: white;
   transition: 1s;
 }
 
-/* ... (other box styles) ... */
 
 .box-1 {
     grid-area: box1;

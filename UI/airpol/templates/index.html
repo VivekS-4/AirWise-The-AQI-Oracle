@@ -25,106 +25,24 @@
         </select>
         <input class="datepicker" type="date" id="dpicker">
         <input class="search" type="search" id="search" placeholder="Search"> 
-        <button class="fetch" id="fetch" onclick="get_input()">Fetch AQI</button>
+        <button class="fetch" id="fetch">Fetch AQI</button>
     </div>
-<div class = "main-frame">
-    <div class="meter">
-        <div class="container">
-            <div class="gauge" id="g1"><svg viewBox="0 0 60 25"><text class="progress-text" name="AQI_P" x="50%" y="50%">20%</text></svg>
-            </div>
-            <div class="gauge" id="g2"><svg viewBox="0 0 60 25"><text class="progress-text" name="W_scal" x="50%" y="50%">70°C</text></svg></div>
-        </div>
-    </div><br>
-    <div class="bot-b">
-        <div class="container">
-            <div class="bot-bar" id="b1"><svg><text style="font-size:xx-large;" x="50%" y="50%">Air Quality: GOOD!</text></svg></div>
-            <div class="bot-bar" id="b2"><svg><text style="font-size:xx-large;" x="50%" y="50%">Temperature: GOOD!</text></svg></div>
-        </div>
-    </div>
-<!-- <iframe src="{{ url_for('static', filename='html/bg.html') }}" width="100%" height="1000" style="border:none;"></iframe> -->
- 
-<div class="glass" style="border:none;z-index:3">   
-    <div class="dashboard">
 
-        <div class="box box-1">
-            <h1>🌍 Toronto West</h1>
-            <div class="air-quality-info">
-                <div class="air-quality-level">Dancing drops descend,
-                    Nature's rhythm in the rain,
-                    Laughs in every splash.</div>
-                <div class="pollution-level"></div><br><br>
-                <div class="ddate"><label id="ddate">2023-11-17</label></div>
-            </div>
-        </div>
+    
 
-        <div class="box box-2">
-            <h2>Weather</h2>
-            <div class="weather-info">
-                <div class="weather-icon">🌧️</div>
-                <!-- <button onclick="changeRandomWeatherIconAndTemperature()">Change Icon</button> -->
-                <div class="temperature">16.5°C</div><br>
-                <div class="location" style="font-size: x-large;">Toronto, ON</div>
-                
-            </div>
-        </div>
-        <div class="box box-3">
-            <h2 style="color: red;">Current High</h2>
-            <p style="font-size: xx-large;">Ozone</p><br>
-            <div class="num" style="font-size: larger;">15.21 PPM</div>
-        </div>
-        <div class="box box-4">
-            <div class ="btn-collection">
-            <button onclick="additional_info()" class = "justbtn" id = "justbtn">How?</button><br>
-            <button onclick="additional_info()" class = "anotherbtn" id = "anotherbtn">Why?</button>
-            </div>
-        </div>
-        <div class="box box-5">
-            <h2 style="color: green;">Current Low</h2>
-            <p style="font-size: xx-large;">NO2</p><br>
-            <div class="num" style="font-size: larger;">0.053 PPM</div>
-        </div>
-        <div class="box box-6">
-            <h2 style="color: salmon;">Health Care & Precaution</h2><br>
-            <p style="font-size: medium;"><b>For all age groups:</b> Carry umbrellas, wear waterproof clothing, and non-slip footwear to prevent slips and falls.<br><br>
-                <b>For the elderly:</b> Avoid getting soaked in the rain to prevent a sudden drop in body temperature. Keep warm and dry.<br><br>
-                <b>For those with health issues:</b> Those prone to allergies should avoid damp areas, while individuals with joint pain might find warmth or using supportive footwear helpful to avoid slips.</p><br>
-            <!-- <div class="num" style="font-size: larger;">0.053 PPM</div> -->
-        </div>
-        
-        <div class="box box-7">
-            <h style="font-size: xx-large; font-weight: bold;">Additional Information</h><br><br>
-            <p style="font-size: x-large; font-family: Ubuntu;" >Good Weather, Great time to get out of your Hibernation!</p>
-            
-        </div>
-    </div>
-    </div>
-</div>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
-// Assuming yourVariable1 and yourVariable2 contain the new percentage values you want to set for g1 and g2 respectively
-const yourVariable1 = 20.4; 
-const yourVariable2 = 16.5; 
 
-const g1Element = document.querySelector('#g1');
-const g2Element = document.querySelector('#g2');
+document.getElementById('fetch').addEventListener('click', function() {
+    fetchTemperature();
+    fetch_main();
+});
 
-g1Element.style.setProperty('--fill-percentage', yourVariable1);
-g2Element.style.setProperty('--fill-percentage', yourVariable2);
+var element = $('#id');
+if (element.length > 0) {
+    element[0].style.display = 'block';
+}
 
-document.querySelector('#g1 .progress-text').textContent = `${yourVariable1}%`;
-document.querySelector('#g2 .progress-text').textContent = `${yourVariable2}°C`;
-
-
-    function get_input() {
-        const selectedDate = document.getElementById("dpicker").value;
-        const cityName = document.getElementById("cityDropdown").value;
-        
-        var dd = document.getElementById("ddate").value
-
-        dd.value = selectedDate
-        // CONSOLE LOG
-        console.log("Selected Date:", selectedDate);
-        console.log("City Name:", cityName);
-    }
 </script>
 </body>
 </html>
