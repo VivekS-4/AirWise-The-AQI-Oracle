@@ -32,6 +32,7 @@ def predict():
     return jsonify(city_predictions)
     return render_template('prediction.html')
 
+
 @airpol.route('/get_temperature', methods=['POST'])
 def get_temperature():
     city = request.json.get('city')
