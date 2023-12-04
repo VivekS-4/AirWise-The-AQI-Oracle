@@ -16,21 +16,20 @@ def index():
     return render_template('index.html')
 
 
-@airpol.route('/prediction', methods=['POST'])
+@airpol.route('/predict', methods=['POST'])
 def predict():
     city_name = request.form.get('city')
     city_name = city_name.title()  # Capitalize the city name
 
     # Call the predict_for_city function with the user-entered city name
     city_predictions = predict_for_city(city_name)
-    # Print predictions for each pollutant
-    # for pollutant, prediction in city_predictions.items():
-    #     print(f"Predicted {pollutant} for the next hour in {city_name}: {prediction}")
-    # overall_aqi = max(city_predictions.values())
-    # print(f"\nOverall predicted AQI: {overall_aqi}")
-    # # Prepare predictions as a JSON response
+    for pollutant, prediction in city_predictions.items():
+        print(f"Predicted {pollutant} for the next hour in {city_name}: {prediction}")
+
+
+    overall_aqi = max(city_predictions.values())
+    # Return predictions as a JSON response
     return jsonify(city_predictions)
-    return render_template('prediction.html')
 
 
 @airpol.route('/get_temperature', methods=['POST'])

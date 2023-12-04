@@ -87,12 +87,14 @@ function updateWeatherIconAndTemperature(temperature) {
     // For example, modifying the color or styles based on temperature, etc.
 }
 
+let predictionsReceived = false; // Initialize boolean variable
+let selectedCity = ''; // Initialize selectedCity variable
 
 
 function fetch_main() {
     event.preventDefault(); // Prevent default form submission
 
-    var selectedCity = $('#cityDropdown').val(); // Get the selected city value
+    selectedCity = $('#cityDropdown').val(); // Get the selected city value
 
     $.ajax({
         type: 'POST',
@@ -108,13 +110,33 @@ function fetch_main() {
     });
 }
 
-// Function to display predictions in the 'predictionResults' div
-function displayPredictions(predictions) {
-    var resultHTML = '<h3>Predictions:</h3><ul>';
-    for (var key in predictions) {
-        resultHTML += '<li>' + key + ': ' + predictions[key] + '</li>';
-    }
-    resultHTML += '</ul>';
-    $('#predictionResults').html(resultHTML); // Display predictions in the 'predictionResults' div
-}
+function displayPredictions() {
+    // Your AJAX call to fetch predictions
+    $.ajax({
+        type: 'POST',
+        url: '/predict',
+        data: { city: selectedCity },
+        success: function (response) {
+            // Handle the received predictions
+            $('#predictionResults').html(JSON.stringify(response));
 
+            // Set predictionsReceived to true after receiving predictions
+            predictionsReceived = true;
+
+            // Show the main frame when predictions are received
+            showMainFrame();
+        },
+        error: function (error) {
+            console.log(error);
+        }
+    });
+}  
+
+function showMainFrame() {
+    const mainFrame = document.getElementById('main-frame');
+    if (predictionsReceived) {
+        mainFrame.style.display = 'block'; // Show main frame
+    } else {
+        mainFrame.style.display = 'none'; // Hide main frame
+    }
+}

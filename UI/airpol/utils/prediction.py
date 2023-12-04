@@ -86,3 +86,14 @@ def predict_for_city(city_name):
         predictions[target_pollutant] = predicted_measurement[0][-1]
 
     return predictions
+
+# city_name = input("Enter the city name: ")
+# city_name = city_name.title()
+# city_predictions = predict_for_city(city_name)
+# for pollutant, prediction in city_predictions.items():
+#     print(f"Predicted {pollutant} for the next hour in {city_name}: {prediction}")
+#
+#
+# overall_aqi = max(city_predictions.values())
+#
+# print(f"\nOverall predicted AQI: {overall_aqi}")
