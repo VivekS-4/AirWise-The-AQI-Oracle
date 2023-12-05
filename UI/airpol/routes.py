@@ -106,3 +106,10 @@ def get_weather():
         return jsonify(weather)
     else:
         return jsonify({'error': 'City not found. Please try again.'}), 404
+
+@airpol.route('/how')
+def how():
+    return render_template('index.html')
+@airpol.route('/why')
+def why():
+    return render_template('why.html')
