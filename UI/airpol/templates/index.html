@@ -78,8 +78,8 @@
         </div>
         <div class="box box-4">
             <div class ="btn-collection">
-            <button onclick="additional_info()" class = "justbtn" id = "justbtn">How?</button><br>
-            <button onclick="additional_info()" class = "anotherbtn" id = "anotherbtn">Why?</button>
+            <button onclick="additional_info()" class = "justbtn" id = "how">How?</button><br>
+            <button onclick="additional_info()" class = "anotherbtn" id = "why">Why?</button>
             </div>
         </div>
         <div class="box box-5">
@@ -98,15 +98,14 @@
         </div>
         
         <div class="box box-7">
-            <p id="id_joke" style="font-size: x-large; font-family: Ubuntu;" ></p>
-            
+            <p id="id_joke" style="font-size: x-large; font-family: Ubuntu;" >..</p>
         </div>
     </div>
     </div>
 
     <div class = "pred">
     
-    <div id="predictionResults" class="predictionResults" style="font-size: x-large; font-weight: bold;">
+    <div id="predictionResults" class="predictionResults" style="font-size: x-large;">
         <h style="font-size: xx-large">Additional Information</h>
         <P></P>
         <P></P>
@@ -129,8 +128,8 @@ let locationElement = document.getElementById('location');
 
 
 document.getElementById('fetch').addEventListener('click', function() {
-    fetchTemperature();
-    //fetchWeather();
+    // fetchTemperature();
+    getWeatherForCity();
     updateAQIAdviceFromCSV();
     fetch_main();
     locationElement.textContent = cityDropdown.value;

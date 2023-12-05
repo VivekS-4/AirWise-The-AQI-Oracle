@@ -50,14 +50,66 @@ function fetchTemperature() {
     });
 }
 
-function displayHaiku(weather) {
-    let description = weather.weather[0].description.toLowerCase();
+function getWeatherForCity() {
+
+    const weatherData = {
+        "weather": [
+          {
+            "description": "clear"
+          },
+          {
+            "description": "overcast clouds"
+          },
+          {
+            "description": "rain"
+          },
+          {
+            "description": "thunderstorm"
+          },
+          {
+            "description": "drizzle"
+          },
+          {
+            "description": "snow"
+          },
+          {
+            "description": "mist"
+          },
+          {
+            "description": "fog"
+          },
+          {
+            "description": "haze"
+          }
+        ]
+      };
+      
+      // Call the displayHaiku function with weather data
+      const randomIndex = Math.floor(Math.random() * weatherData.weather.length);
+      return weatherData.weather[randomIndex].description;
+      
+  }
+
+  const randomWeatherDescription = getRandomWeatherDescription();
+
+function getSelectedCityWeather() {
+    const cityDropdown = document.getElementById('cityDropdown');
+    const selectedCity = cityDropdown.value;
+  
+    // Call getWeatherForCity with the selected city name
+    getWeatherForCity(selectedCity);
+  }
+
+
+function displayHaiku(randomWeatherDescription) {
+    
+    let description = weatherDescription.toLowerCase();
     let haiku = '';
 
     // Conditions to associate haikus with weather descriptions
     if (description.includes('clear')) {
         haiku = "Golden rays embrace,\nNature's canvas painted bright,\nSerenade of warmth.";
-    } else if (description.includes('clouds')) {
+    } else if (description.includes('clouds')|| description.includes('overcast')) {
         haiku = "Whispers in the sky,\nVeiled hues, a misty ballet,\nSecrets softly told.";
     } else if (description.includes('rain')) {
         haiku = "Pitter-patter sounds,\nEarth's symphony in the rain,\nDance of life renewed.";
@@ -173,7 +225,6 @@ function predict() {
             console.error('Error fetching data:', error);
         });
 }
-
 
 function displayAQIAdvice(aqi) {
     let allages = '';
@@ -295,7 +346,6 @@ function updateAQIAdviceFromCSV() {
             console.error('Error fetching data:', error);
         });
 }
-
 
 
 
