@@ -4,26 +4,46 @@ from airpol import airpol
 from airpol.utils.prediction import predict_for_city
 import sqlite3
 
-conn = sqlite3.connect('predictions.db')
-cursor = conn.cursor()
 
-cursor.execute('''
-    CREATE TABLE IF NOT EXISTS predictions (
-        city TEXT,
-        SO2 REAL,
-        NO2 REAL,
-        CO REAL,
-        PM25 REAL,
-        O3 REAL,
-        overall_aqi REAL
-    )
-''')
 
 
 
 print("Predictions saved to the database.")
 
 api_key = '4fb39bf5c97d06c2a97e2884ecc992de'  # Replace 'YOUR_API_KEY' with your Weatherstack API key
+
+def get_db_connection():
+    return sqlite3.connect('predictions.sqlite')
+
+def clear_database():
+    conn = get_db_connection()
+    cursor = conn.cursor()
+
+    try:
+        # Drop the existing predictions table if it exists
+        cursor.execute('DROP TABLE IF EXISTS predictions')
+
+        # Recreate the predictions table
+        cursor.execute('''
+            CREATE TABLE predictions (
+                city TEXT,
+                SO2 REAL,
+                NO2 REAL,
+                CO REAL,
+                PM25 REAL,
+                O3 REAL,
+                overall_aqi REAL
+            )
+        ''')
+
+        conn.commit()
+        print("Database cleared and table 'predictions' recreated successfully.")
+
+    except sqlite3.Error as e:
+        print("SQLite error:", e)
+        conn.rollback()  # Rollback changes if an error occurs
+    finally:
+        conn.close()  # Close the connection after completing the operations
 
 
 @airpol.route('/')
@@ -38,10 +58,19 @@ def index():
 
 @airpol.route('/predict', methods=['POST'])
 def predict():
+    clear_database()
+
     city_name = request.form.get('city')
     city_name = city_name.title()  # Capitalize the city name
     
     city_predictions = predict_for_city(city_name, model_filename="m.keras")
+
+    conn = get_db_connection()
+    cursor = conn.cursor()
+    
+
+    data = {}
+
 
     # Initialize variables to store predicted values
     predicted_SO2 = city_predictions['SO2']
@@ -52,11 +81,23 @@ def predict():
     # Determine the overall AQI
     overall_aqi = max(city_predictions.values())
 
+    data = {
+        'predicted_SO2': city_predictions['SO2'],
+        'predicted_NO2': city_predictions['NO2'],
+        'predicted_CO': city_predictions['CO'],
+        'predicted_PM25': city_predictions['PM2.5'],
+        'predicted_O3': city_predictions['O3'],
+        'overall_aqi': overall_aqi
+    }
+
+    print(data['predicted_SO2'])
+
     cursor.execute('''
     INSERT INTO predictions (city, SO2, NO2, CO, PM25, O3, overall_aqi)
     VALUES (?, ?, ?, ?, ?, ?, ?)
     ''', (city_name, predicted_SO2, predicted_NO2, predicted_CO, predicted_PM25, predicted_O3, overall_aqi))
-
+    
+    
     conn.commit()
     conn.close()
 
@@ -77,17 +118,17 @@ def predict():
     new_predicted_O3 = city_predictions['O3']
     # Determine the overall AQI
     new_overall_aqi = max(city_predictions.values())
-    new_city_name = city_name
+
 
     conn = sqlite3.connect('predictions.db')
     cursor = conn.cursor()
 
-# Update values for a specific city
+    # Update values for a specific city
     cursor.execute('''
         UPDATE predictions
         SET SO2 = ?, NO2 = ?, CO = ?, PM25 = ?, O3 = ?, overall_aqi = ?
         WHERE city = ?
-        ''', (new_predicted_SO2, new_predicted_NO2, new_predicted_CO, new_predicted_PM25, new_predicted_O3, new_overall_aqi, new_city_name))
+        ''', (new_predicted_SO2, new_predicted_NO2, new_predicted_CO, new_predicted_PM25, new_predicted_O3, new_overall_aqi, city_name))
 
     conn.commit()
     conn.close()
@@ -95,8 +136,8 @@ def predict():
     print("Predictions updated in the database.")
     
 
-    return "Predictions saved to local variables."
-
+    # return "Predictions saved to local variables."
+    return render_template('index.html', data=data)
 
 @airpol.route('/get_temperature', methods=['POST'])
 def get_temperature():

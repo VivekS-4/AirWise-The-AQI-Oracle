@@ -100,6 +100,7 @@ function fetchWeather() {
         success: function(response) {
             // Handle the weather data response here
             displayHaiku(response); // Display the haiku based on weather description
+            console.log(response)
         },
         error: function(error) {
             console.log('Error fetching weather data. Please try again.');
@@ -183,43 +184,42 @@ function fetchAndDisplayPredictions(selectedCity) {
     });
 }
 
+/////////////////////////////////////////////////////////
 function displayPredictions(predictions) {
 
+    const xhr = new XMLHttpRequest();
+xhr.open('GET', 'D:/temp/UI/predictions.sqlite', true);
+xhr.responseType = 'arraybuffer';
 
+xhr.onload = e => {
+  const uInt8Array = new Uint8Array(xhr.response);
+  const db = new SQL.Database(uInt8Array);
+  const contents = db.exec("SELECT * FROM predictions");
+  // contents is now [{columns:['col1','col2',...], values:[[first row], [second row], ...]
+  console.log(contents)
+};
+  xhr.send();
+    
 
-// Store parsed values in variables
-const parsedSO2 = parseFloat(predictions.SO2);
-const parsedNO2 = parseFloat(predictions.NO2);
-const parsedCO = parseFloat(predictions.CO);
-const parsedPM25 = parseFloat(predictions['PM2.5']);
-const parsedO3 = parseFloat(predictions.O3);
-const parsedOverallAQI = parseFloat(predictions.Overall_AQI);
-
-// Display parsed values in console
-console.log(`Parsed SO2: ${parsedSO2}`);
-console.log(`Parsed NO2: ${parsedNO2}`);
-console.log(`Parsed CO: ${parsedCO}`);
-console.log(`Parsed PM2.5: ${parsedPM25}`);
-console.log(`Parsed O3: ${parsedO3}`);
-console.log(`Parsed Overall AQI: ${parsedOverallAQI}`);
-
-  $('#predictedSO2').text(`Predicted SO2: ${formatValue(predictions.SO2)}`);
-  
-  $('#predictedNO2').text(`Predicted NO2: ${formatValue(predictions.NO2)}`);
-
-  $('#predictedCO').text(`Predicted CO: ${formatValue(predictions.CO)}`);
- 
-  $('#predictedPM25').text(`Predicted PM2.5: ${formatValue(predictions['PM2.5'])}`);
-
-  $('#predictedO3').text(`Predicted O3: ${formatValue(predictions.O3)}`);
-
-  $('#overallAQI').text(`Overall predicted AQI: ${formatValue(predictions.Overall_AQI)}`);
-
-  
+    showMainFrame()
+    // Update HTML with the received predictions
+    $('#predictedSO2').text(`Predicted SO2: ${predictions.SO2}`);
+    console.log(`Predicted SO2: ${predictions.SO2}`);
+    $('#predictedNO2').text(`Predicted NO2: ${predictions.NO2}`);
+    console.log(`Predicted NO2: ${predictions.NO2}`);
+    $('#predictedCO').text(`Predicted CO: ${predictions.CO}`);
+    console.log(`Predicted CO: ${predictions.CO}`);
+    $('#predictedPM25').text(`Predicted PM2.5: ${predictions['PM2.5']}`);
+    console.log(`Predicted PM2.5: ${predictions['PM2.5']}`);
+    $('#predictedO3').text(`Predicted O3: ${predictions.O3}`);
+    console.log(`Predicted O3: ${predictions.O3}`);
+    $('#overallAQI').text(`Overall predicted AQI: ${predictions.Overall_AQI}`);
+    console.log(`Overall predicted AQI: ${predictions.Overall_AQI}`);
 }
 
 function showMainFrame() {
     const mainFrame = document.getElementById('main-frame');
+    dbconn();
     mainFrame.style.display = 'block'; // Show main frame
 }
 
@@ -229,4 +229,22 @@ function fetch_main() {
 
     // Fetch and display predictions for the selected city
     fetchAndDisplayPredictions(selectedCity);
+    
+}
+
+function dbconn(){
+
+
+   
+    // // Accessing values passed from Flask in JavaScript
+    // var value1 =  data['predicted_SO2'];
+    // var value2 =  data['predicted_NO2'];
+    
+    // // Store values in localStorage or sessionStorage
+    // localStorage.setItem('value1', value1);
+    // localStorage.setItem('value2', value2);
+
+    console.log(data)
+    // console.log(data.predicted_SO2)
+    console.log('Ajit')
 }

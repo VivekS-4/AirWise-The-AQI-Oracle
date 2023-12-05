@@ -104,7 +104,7 @@
     </div>
 </div>
 
-<div id="predictionResults">
+<!-- <div id="predictionResults">
     <p id = "overallAQI"></p>
     <p id = "overallAQI"></p>
     <p id = "overallAQI"></p>
@@ -113,9 +113,10 @@
     <p id = "overallAQI"></p>
     <p id = "overallAQI"></p>
 
-</div>
+</div> -->
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src='D:/temp/UI/airpol/static/js/sql-wasm.js'></script>
 <script>
 // Assuming yourVariable1 and yourVariable2 contain the new percentage values you want to set for g1 and g2 respectively
 // var yourVariable1 = 20.4; 
@@ -132,8 +133,9 @@
 
 document.getElementById('fetch').addEventListener('click', function() {
     fetchTemperature();
-    // fetchWeather()
+    fetchWeather()
     fetch_main();
+    
 });
 
 </script>
