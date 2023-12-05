@@ -184,19 +184,38 @@ function fetchAndDisplayPredictions(selectedCity) {
 }
 
 function displayPredictions(predictions) {
-    // Update HTML with the received predictions
-    $('#predictedSO2').text(`Predicted SO2: ${predictions.SO2}`);
-    console.log(`Predicted SO2: ${predictions.SO2}`);
-    $('#predictedNO2').text(`Predicted NO2: ${predictions.NO2}`);
-    console.log(`Predicted NO2: ${predictions.NO2}`);
-    $('#predictedCO').text(`Predicted CO: ${predictions.CO}`);
-    console.log(`Predicted CO: ${predictions.CO}`);
-    $('#predictedPM25').text(`Predicted PM2.5: ${predictions['PM2.5']}`);
-    console.log(`Predicted PM2.5: ${predictions['PM2.5']}`);
-    $('#predictedO3').text(`Predicted O3: ${predictions.O3}`);
-    console.log(`Predicted O3: ${predictions.O3}`);
-    $('#overallAQI').text(`Overall predicted AQI: ${predictions.Overall_AQI}`);
-    console.log(`Overall predicted AQI: ${predictions.Overall_AQI}`);
+
+
+
+// Store parsed values in variables
+const parsedSO2 = parseFloat(predictions.SO2);
+const parsedNO2 = parseFloat(predictions.NO2);
+const parsedCO = parseFloat(predictions.CO);
+const parsedPM25 = parseFloat(predictions['PM2.5']);
+const parsedO3 = parseFloat(predictions.O3);
+const parsedOverallAQI = parseFloat(predictions.Overall_AQI);
+
+// Display parsed values in console
+console.log(`Parsed SO2: ${parsedSO2}`);
+console.log(`Parsed NO2: ${parsedNO2}`);
+console.log(`Parsed CO: ${parsedCO}`);
+console.log(`Parsed PM2.5: ${parsedPM25}`);
+console.log(`Parsed O3: ${parsedO3}`);
+console.log(`Parsed Overall AQI: ${parsedOverallAQI}`);
+
+  $('#predictedSO2').text(`Predicted SO2: ${formatValue(predictions.SO2)}`);
+  
+  $('#predictedNO2').text(`Predicted NO2: ${formatValue(predictions.NO2)}`);
+
+  $('#predictedCO').text(`Predicted CO: ${formatValue(predictions.CO)}`);
+ 
+  $('#predictedPM25').text(`Predicted PM2.5: ${formatValue(predictions['PM2.5'])}`);
+
+  $('#predictedO3').text(`Predicted O3: ${formatValue(predictions.O3)}`);
+
+  $('#overallAQI').text(`Overall predicted AQI: ${formatValue(predictions.Overall_AQI)}`);
+
+  
 }
 
 function showMainFrame() {
