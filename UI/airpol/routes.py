@@ -20,16 +20,30 @@ def index():
 def predict():
     city_name = request.form.get('city')
     city_name = city_name.title()  # Capitalize the city name
+    
+    city_predictions = predict_for_city(city_name, model_filename="m.keras")
+
+    # Initialize variables to store predicted values
+    predicted_SO2 = city_predictions['SO2']
+    predicted_NO2 = city_predictions['NO2']
+    predicted_CO = city_predictions['CO']
+    predicted_PM25 = city_predictions['PM2.5']
+    predicted_O3 = city_predictions['O3']
+    # Determine the overall AQI
+    overall_aqi = max(city_predictions.values())
 
     # Call the predict_for_city function with the user-entered city name
-    city_predictions = predict_for_city(city_name)
-    for pollutant, prediction in city_predictions.items():
-        print(f"Predicted {pollutant} for the next hour in {city_name}: {prediction}")
+    
+    print(f"Predicted SO2 for the next hour in {city_name}: {predicted_SO2}")
+    print(f"Predicted NO2 for the next hour in {city_name}: {predicted_NO2}")
+    print(f"Predicted CO for the next hour in {city_name}: {predicted_CO}")
+    print(f"Predicted PM2.5 for the next hour in {city_name}: {predicted_PM25}")
+    print(f"Predicted O3 for the next hour in {city_name}: {predicted_O3}")
+    print(f"\nOverall predicted AQI: {overall_aqi}")
 
+    
 
-    overall_aqi = max(city_predictions.values())
-    # Return predictions as a JSON response
-    return jsonify(city_predictions)
+    return "Predictions saved to local variables."
 
 
 @airpol.route('/get_temperature', methods=['POST'])

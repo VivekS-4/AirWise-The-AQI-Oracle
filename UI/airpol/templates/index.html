@@ -49,9 +49,13 @@
         <div class="box box-1">
             <h1>🌍 Toronto West</h1>
             <div class="air-quality-info">
-                <div class="air-quality-level">Dancing drops descend,
+                <div class="air-quality-level">
+                    <p id="haikuElement">
+                    Dancing drops descend,
                     Nature's rhythm in the rain,
-                    Laughs in every splash.</div>
+                    Laughs in every splash.
+                    </p>        
+                </div>
                 <div class="pollution-level"></div><br><br>
                 <div class="ddate"><label id="ddate">2023-11-17</label></div>
             </div>
@@ -100,7 +104,16 @@
     </div>
 </div>
 
-<div id="predictionResults"></div>
+<div id="predictionResults">
+    <p id = "overallAQI"></p>
+    <p id = "overallAQI"></p>
+    <p id = "overallAQI"></p>
+    <p id = "overallAQI"></p>
+    <p id = "overallAQI"></p>
+    <p id = "overallAQI"></p>
+    <p id = "overallAQI"></p>
+
+</div>
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
@@ -119,6 +132,7 @@
 
 document.getElementById('fetch').addEventListener('click', function() {
     fetchTemperature();
+    // fetchWeather()
     fetch_main();
 });
 

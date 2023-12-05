@@ -59,6 +59,55 @@ function fetchTemperature() {
 
 }
 
+//
+function displayHaiku(weather) {
+    let description = weather.weather[0].description.toLowerCase();
+    let haiku = '';
+
+    // Conditions to associate haikus with weather descriptions
+    if (description.includes('clear')) {
+        haiku = "Golden rays embrace,\nNature's canvas painted bright,\nSerenade of warmth.";
+    } else if (description.includes('clouds')) {
+        haiku = "Whispers in the sky,\nVeiled hues, a misty ballet,\nSecrets softly told.";
+    } else if (description.includes('rain')) {
+        haiku = "Pitter-patter sounds,\nEarth's symphony in the rain,\nDance of life renewed.";
+    } else if (description.includes('thunderstorm')) {
+        haiku = "Thunder's booming voice,\nNature's grand electric show,\nPower in the sky.";
+    } else if (description.includes('drizzle')) {
+        haiku = "Gentle droplets fall,\nWhispering secrets softly,\nEarth's gentle lullaby.";
+    } else if (description.includes('snow')) {
+        haiku = "Silent flakes descend,\nBlanketing the world in white,\nSoftly kissing Earth.";
+    } else if (description.includes('mist') || description.includes('fog')) {
+        haiku = "Veiled in mystery,\nMist draped whispers through the air,\nNature's quiet cloak.";
+    } else if (description.includes('haze')) {
+        haiku = "Veil of smoky haze,\nSoftening edges of day,\nNature's tranquil breath.";
+    } else {
+        haiku = "Weather's mystery,\nNature's symphony of change,\nBeauty in motion.";
+    }
+
+    // Display the selected haiku in the HTML element
+    document.getElementById('haikuElement').innerText = haiku;
+}
+function fetchWeather() {
+    let city = $('#cityDropdown').val(); // Get the selected city value from the dropdown
+    let firstWord = city.split(' ')[0]; // Extract the first word of the city name
+
+    // Make an API call to fetch weather data for the first word of the city
+    $.ajax({
+        type: 'POST',
+        url: '/get_weather', // Flask route to handle weather data retrieval
+        data: { city: firstWord }, // Data to send to the server (first word of the city)
+        success: function(response) {
+            // Handle the weather data response here
+            displayHaiku(response); // Display the haiku based on weather description
+        },
+        error: function(error) {
+            console.log('Error fetching weather data. Please try again.');
+        }
+    });
+}
+
+//
 
 
 // Function to update weather icon and temperature based on fetched temperature
@@ -87,21 +136,45 @@ function updateWeatherIconAndTemperature(temperature) {
     // For example, modifying the color or styles based on temperature, etc.
 }
 
+///.....................................................................................
+
+
+
+function savePredictionsToStorage(predictions) {
+    // Convert predictions to JSON string
+    const predictionsJSON = JSON.stringify(predictions);
+
+    // Store in localStorage
+    localStorage.setItem('predictedValues', predictionsJSON);
+}
+
+function getPredictionsFromStorage() {
+    // Retrieve the JSON string from localStorage
+    const predictionsJSON = localStorage.getItem('predictedValues');
+
+    // Parse JSON string to object
+    const predictions = JSON.parse(predictionsJSON);
+
+    // Return the predictions object
+    return predictions;
+}
+
+
+
+
+///.....................................................................................
+
 let predictionsReceived = false; // Initialize boolean variable
 let selectedCity = ''; // Initialize selectedCity variable
 
 
-function fetch_main() {
-    event.preventDefault(); // Prevent default form submission
-
-    selectedCity = $('#cityDropdown').val(); // Get the selected city value
-
+function fetchAndDisplayPredictions(selectedCity) {
     $.ajax({
         type: 'POST',
-        url: '/predict', // The Flask route to handle the prediction
-        data: { city: selectedCity }, // Data to send to the server
+        url: '/predict',
+        data: { city: selectedCity },
         success: function (response) {
-            // Handle the response here (e.g., update HTML with predictions)
+            // Handle the received predictions
             displayPredictions(response);
         },
         error: function (error) {
@@ -110,33 +183,31 @@ function fetch_main() {
     });
 }
 
-function displayPredictions() {
-    // Your AJAX call to fetch predictions
-    $.ajax({
-        type: 'POST',
-        url: '/predict',
-        data: { city: selectedCity },
-        success: function (response) {
-            // Handle the received predictions
-            $('#predictionResults').html(JSON.stringify(response));
-
-            // Set predictionsReceived to true after receiving predictions
-            predictionsReceived = true;
-
-            // Show the main frame when predictions are received
-            showMainFrame();
-        },
-        error: function (error) {
-            console.log(error);
-        }
-    });
-}  
+function displayPredictions(predictions) {
+    // Update HTML with the received predictions
+    $('#predictedSO2').text(`Predicted SO2: ${predictions.SO2}`);
+    console.log(`Predicted SO2: ${predictions.SO2}`);
+    $('#predictedNO2').text(`Predicted NO2: ${predictions.NO2}`);
+    console.log(`Predicted NO2: ${predictions.NO2}`);
+    $('#predictedCO').text(`Predicted CO: ${predictions.CO}`);
+    console.log(`Predicted CO: ${predictions.CO}`);
+    $('#predictedPM25').text(`Predicted PM2.5: ${predictions['PM2.5']}`);
+    console.log(`Predicted PM2.5: ${predictions['PM2.5']}`);
+    $('#predictedO3').text(`Predicted O3: ${predictions.O3}`);
+    console.log(`Predicted O3: ${predictions.O3}`);
+    $('#overallAQI').text(`Overall predicted AQI: ${predictions.Overall_AQI}`);
+    console.log(`Overall predicted AQI: ${predictions.Overall_AQI}`);
+}
 
 function showMainFrame() {
     const mainFrame = document.getElementById('main-frame');
-    if (predictionsReceived) {
-        mainFrame.style.display = 'block'; // Show main frame
-    } else {
-        mainFrame.style.display = 'none'; // Hide main frame
-    }
+    mainFrame.style.display = 'block'; // Show main frame
+}
+
+// Assuming this function is triggered when a city is selected
+function fetch_main() {
+    let selectedCity = $('#cityDropdown').val(); // Get the selected city value
+
+    // Fetch and display predictions for the selected city
+    fetchAndDisplayPredictions(selectedCity);
 }
