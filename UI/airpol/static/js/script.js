@@ -90,7 +90,7 @@ function getWeatherForCity() {
       
   }
 
-  const randomWeatherDescription = getRandomWeatherDescription();
+const randomWeatherDescription = getWeatherForCity();
 
 function getSelectedCityWeather() {
     const cityDropdown = document.getElementById('cityDropdown');
@@ -170,6 +170,8 @@ function predict() {
     // Assuming you have a function fetchDataFromCSV() to fetch data from the CSV file
     fetchDataFromCSV()
         .then(data => {
+
+            
             // Display pollutant values
             document.getElementById('city').textContent = `City: ${data.city}`;
             document.getElementById('SO2').textContent = `SO2: ${data.SO2}`;
@@ -178,52 +180,13 @@ function predict() {
             document.getElementById('PM25').textContent = `PM25: ${data.PM25}`;
             document.getElementById('O3').textContent = `O3: ${data.O3}`;
             document.getElementById('overallAQI').textContent = `Overall AQI: ${data.overallAQI}`;
-
             
-            // Compare pollutant values for minimum and maximum
-            let minPollutant = '';
-            let maxPollutant = '';
-            let minVal = Number.MAX_VALUE; // Initialize to a very large number
-            let maxVal = Number.MIN_VALUE; // Initialize to a very small number
-
-            // Compare each pollutant value and update min/max values
-            if (data.SO2 < minVal) {
-                minVal = data.SO2;
-                minPollutant = 'SO2';
-            }
-            if (data.SO2 > maxVal) {
-                maxVal = data.SO2;
-                maxPollutant = 'SO2';
-            }
-
-            if (data.NO2 < minVal) {
-                minVal = data.NO2;
-                minPollutant = 'NO2';
-            }
-            if (data.NO2 > maxVal) {
-                maxVal = data.NO2;
-                maxPollutant = 'NO2';
-            }
-
-            // Continue the comparisons for CO, PM25, O3, etc.
-
-            // Display the minimum and maximum pollutants in respective divs
-            if (minPollutant !== '') {
-                document.querySelector('.box-5 h2').textContent = 'Current Low';
-                document.querySelector('.box-5 p').textContent = minPollutant;
-                document.querySelector('.box-5 .num').textContent = `${minVal} PPM`;
-            }
-
-            if (maxPollutant !== '') {
-                document.querySelector('.box-3 h2').textContent = 'Current High';
-                document.querySelector('.box-3 p').textContent = maxPollutant;
-                document.querySelector('.box-3 .num').textContent = `${maxVal} PPM`;
-            }
-            
+        
         })
         .catch(error => {
             console.error('Error fetching data:', error);
         });
+    
 }
 
 function displayAQIAdvice(aqi) {
@@ -374,4 +337,6 @@ function fetch_main() {
 function showMainFrame() {
     const mainFrame = document.getElementById('main-frame');
     mainFrame.style.display = 'block'; // Show main frame
+    const another = document.getElementById('refetch');
+    another.style.display = "block";
 }

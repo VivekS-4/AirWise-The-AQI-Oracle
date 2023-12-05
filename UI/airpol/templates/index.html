@@ -24,41 +24,33 @@
           <!-- Add more options as needed -->
         </select>
         <!-- <input class="datepicker" type="date" id="dpicker"> -->
-        <input class="search" type="search" id="search" placeholder="Search"> 
+        <!-- <input class="search" type="search" id="search" placeholder="Search">  -->
+        
+        <a class="refetch" id="refetch" href="/">Fetch Another AQI</a>
         <button class="fetch" id="fetch">Fetch AQI</button>
     </div>
 <div class = "main-frame" id= "main-frame" style="display: none;">
-    <div class="meter">
+    <!-- <div class="meter">
         <div class="container">
             <div class="gauge" id="g1"><svg viewBox="0 0 60 25"><text class="progress-text" name="AQI_P" x="50%" y="50%">20%</text></svg>
             </div>
             <div class="gauge" id="g2"><svg viewBox="0 0 60 25"><text class="progress-text" name="W_scal" x="50%" y="50%">70°C</text></svg></div>
         </div>
-    </div><br>
-    <div class="bot-b">
+    </div><br> -->
+    <!-- <div class="bot-b">
         <div class="container">
             <div class="bot-bar" id="b1"><text style="font-size:xx-large;" x="50%" y="50%">Air Quality: GOOD!</text></div>
             <div class="bot-bar" id="b2"><text id="Temprature"style="font-size:xx-large; overflow" x="50%" y="50%">Temperature: GOOD!</text></div>
         </div>
-    </div>
+    </div> -->
 <!-- <iframe src="{{ url_for('static', filename='html/bg.html') }}" width="100%" height="1000" style="border:none;"></iframe> -->
 <h1>{{data}}</h1>
 <div class="glass" style="border:none;z-index:3">   
     <div class="dashboard">
 
-        <div class="box box-1">
-            <!-- <h1>🌍<p id='location'>Toronto West</p></h1> -->
-            <div class="air-quality-info">
-                <div class="air-quality-level">
-                    <p id="haikuElement">
-                    Dancing drops descend,
-                    Nature's rhythm in the rain,
-                    Laughs in every splash.
-                    </p>        
-                </div>
-                <div class="pollution-level"></div><br><br><br><br><br>
-                <div class="ddate"><label id="ddate">2023-11-17</label></div>
-            </div>
+        <div id="predictionResults" class="box box-1" >
+                <h style="font-size: xx-large">Additional Information</h>
+                   
         </div>
 
         <div class="box box-2">
@@ -66,27 +58,27 @@
             <div class="weather-info">
                 <div class="weather-icon">🌧️</div>
                 <!-- <button onclick="changeRandomWeatherIconAndTemperature()">Change Icon</button> -->
-                <div id="temp-2" class="temperature">16.5°C</div><br>
+                <!-- <div id="temp-2" class="temperature">16.5°C</div><br> -->
                 <div id="location"class="location" style="font-size: x-large;">Toronto, ON</div>
                 
             </div>
         </div>
-        <div class="box box-3">
+        <!-- <div class="box box-3">
             <h2 style="color: red;">Current High</h2>
             <p style="font-size: xx-large;">Ozone</p><br>
             <div class="num" style="font-size: larger;">15.21 PPM</div>
-        </div>
+        </div> -->
         <div class="box box-4">
             <div class ="btn-collection">
-            <button onclick="additional_info()" class = "justbtn" id = "how">How?</button><br>
-            <button onclick="additional_info()" class = "anotherbtn" id = "why">Why?</button>
+            <button onclick="additional_info()" class = "justbtn" ><a id="how" href="/how" style="color: aliceblue;">How?</a></button><br>
+            <button onclick="additional_info()" class = "anotherbtn"><a id="why"href="/why" style="color: aliceblue;">Why?</a></button>
             </div>
         </div>
-        <div class="box box-5">
+        <!-- <div class="box box-5">
             <h2 style="color: green;">Current Low</h2>
             <p style="font-size: xx-large;">NO2</p><br>
             <div class="num" style="font-size: larger;">0.053 PPM</div>
-        </div>
+        </div> -->
         <div class="box box-6">
             <h2 style="color: salmon;">Health Care & Precaution</h2><br>
             <p style="font-size: medium;">
@@ -102,19 +94,6 @@
         </div>
     </div>
     </div>
-
-    <div class = "pred">
-    
-    <div id="predictionResults" class="predictionResults" style="font-size: x-large;">
-        <h style="font-size: xx-large">Additional Information</h>
-        <P></P>
-        <P></P>
-        <P></P>
-        <P></P>
-        <P></P>
-        <P></P>
-    </div>    
-    </div>
 </div>
 
 
@@ -129,10 +108,11 @@ let locationElement = document.getElementById('location');
 
 document.getElementById('fetch').addEventListener('click', function() {
     // fetchTemperature();
-    getWeatherForCity();
+    //getWeatherForCity();
     updateAQIAdviceFromCSV();
     fetch_main();
     locationElement.textContent = cityDropdown.value;
+    document.getElementById('fetch').style.display = "none";
 });
 
 //////////////////////////////////////////////////////////////////////////////

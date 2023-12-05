@@ -1,8 +1,31 @@
+
 <!DOCTYPE html>
-<html>
+<html lang="en">
+<head>
+    <title>How our AI Model Works</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-image: url('/static/images/1-2.jpg');
+            background-size: cover;
+        }
+
+        iframe {
+            width: 70%;
+            height: 90%;
+        }
+    </style>
+</head>
+
 <body>
-    <h1>
-        This is How
-    </h1>
+
+    <iframe src="{{ url_for('serve_pdf', filename='report.pdf') }}" frameborder="0"></iframe>
+<!-- 
+<iframe src="D:/temp/UI/airpol/docs/report.pdf" style="width:600px; height:500px;" frameborder="0"></iframe> -->
+
 </body>
 </html>

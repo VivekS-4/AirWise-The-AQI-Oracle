@@ -1,5 +1,5 @@
 import csv
-from flask import render_template, request, jsonify, send_file
+from flask import render_template, request, jsonify, send_file, send_from_directory
 from airpol import airpol
 from airpol.utils.prediction import predict_for_city
 import requests
@@ -107,9 +107,20 @@ def get_weather():
     else:
         return jsonify({'error': 'City not found. Please try again.'}), 404
 
+
+
+@airpol.route('/show_pdf')
+def show_pdf():
+    return render_template('pdf_viewer.html')
+
+
+@airpol.route('/UI/airpol/docs/<path:filename>')
+def serve_pdf(filename):
+    return send_from_directory('docs', filename)
+
 @airpol.route('/how')
 def how():
-    return render_template('index.html')
+    return render_template('how.html')
 @airpol.route('/why')
 def why():
     return render_template('why.html')

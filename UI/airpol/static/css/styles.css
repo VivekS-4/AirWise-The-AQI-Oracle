@@ -54,6 +54,24 @@ body {
     background-color: #f2495c;
   }
 
+  #refetch{
+    border-color: rgba(158, 155, 154, 0.5);
+    font-size: medium;
+    font-style: italic;
+    font-weight: bold;
+    color: aliceblue;
+    border-radius: 10px;
+    padding: 10px;
+    margin-top: 1%;
+    margin-bottom: 1%;
+    margin-right: 1%;
+    order: 4;
+    float: right;
+    background-color: forestgreen;
+    width: 10%; 
+    display: none;
+  }
+
   button.fetch{
     border-color: rgba(158, 155, 154, 0.5);
     font-size: medium;
@@ -257,7 +275,8 @@ select{
 .bot-b{
     background: #191919;
     max-width: fit-content;
-    margin-bottom: 25%; 
+    margin-top: 20%;
+    margin-bottom: 10%; 
     margin-left: auto;
     margin-right: auto;
     border-radius: 20px;
@@ -297,6 +316,7 @@ select{
   box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3), 0 6px 20px rgba(0, 0, 0, 0.3);
   z-index: 1;
   margin-bottom: 15%;
+  margin-top: 20%;
 }
 
 .glass:before {
@@ -319,11 +339,11 @@ select{
   grid-template-rows: repeat(3, 140px);
   grid-gap: 20px;
   grid-template-areas: 
-      "box1 box2 box3 box6 box4"
-      "box1 box2 box5 box6 box4"
+      "box1 box2 box2 box6 box4"
+      "box1 box2 box2 box6 box4"
       "box7 box7 box7 box7 box4";
   max-width: fit-content;
-  padding: 20px;
+  
   justify-content: center;
   max-height: fit-content;
 }
@@ -341,17 +361,18 @@ color: white;
 
 
 .box-1 {
-    grid-area: box1;
-    width: 300px;  
-    transition: 1s;
-}
-.box-1:hover{
-    transform: rotateX('180');
-
-}
-
-.box-2 {
     grid-area: box2;
+    width: 600px;
+    overflow: scroll;
+}
+.box-1::-webkit-scrollbar{
+  display: none;
+}
+.box-1 > p {
+  font-size: larger;
+}
+.box-2 {
+    grid-area: box1;
     width: 300px;  
 }
 
@@ -446,8 +467,8 @@ p {
 
 .predictionResults{
   color: white;
-  height: 60%;
-  width: 50%;
+  height: fit-content;
+  width: fit-content;
   margin-left: auto;
   margin-right: auto;
   margin-bottom: 2%;
@@ -457,4 +478,5 @@ p {
   box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
   border-radius: 20px;
   transition: 1s;
+  overflow: hidden;
 }
