@@ -1,152 +1,76 @@
-from flask import render_template, request, jsonify
-import requests
+import csv
+from flask import render_template, request, jsonify, send_file
 from airpol import airpol
 from airpol.utils.prediction import predict_for_city
-import sqlite3
+import requests
 
+print("Predictions saved to the CSV file.")
 
+def clear_csv_file():
+    with open('predictions.csv', 'w', newline='') as file:
+        writer = csv.writer(file)
+        writer.writerow(['City', 'SO2', 'NO2', 'CO', 'PM25', 'O3', 'Overall AQI'])
+    print("CSV file cleared successfully.")
 
-
-
-print("Predictions saved to the database.")
-
-api_key = '4fb39bf5c97d06c2a97e2884ecc992de'  # Replace 'YOUR_API_KEY' with your Weatherstack API key
-
-def get_db_connection():
-    return sqlite3.connect('predictions.sqlite')
-
-def clear_database():
-    conn = get_db_connection()
-    cursor = conn.cursor()
-
+@airpol.route('/get_csv_data')
+def get_csv_data():
+    # Read the CSV file and send it as a response
     try:
-        # Drop the existing predictions table if it exists
-        cursor.execute('DROP TABLE IF EXISTS predictions')
-
-        # Recreate the predictions table
-        cursor.execute('''
-            CREATE TABLE predictions (
-                city TEXT,
-                SO2 REAL,
-                NO2 REAL,
-                CO REAL,
-                PM25 REAL,
-                O3 REAL,
-                overall_aqi REAL
-            )
-        ''')
-
-        conn.commit()
-        print("Database cleared and table 'predictions' recreated successfully.")
-
-    except sqlite3.Error as e:
-        print("SQLite error:", e)
-        conn.rollback()  # Rollback changes if an error occurs
-    finally:
-        conn.close()  # Close the connection after completing the operations
-
+        with open('D:/temp/UI/predictions.csv', 'r') as file:
+            csv_data = file.read()
+            return csv_data, 200, {'Content-Type': 'text/csv'}
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
 
 @airpol.route('/')
 def initial():
     return render_template('initial_page.html')
 
-
 @airpol.route('/index')
 def index():
-    return render_template('index.html')
+    with open('predictions.csv', newline='') as file:
+        reader = csv.reader(file)
+        data = next(reader)
 
+    return render_template('index.html', prediction_data=data)
 
 @airpol.route('/predict', methods=['POST'])
 def predict():
-    clear_database()
+    clear_csv_file()
 
     city_name = request.form.get('city')
-    city_name = city_name.title()  # Capitalize the city name
-    
+    if not city_name:
+        return "No city provided"
+
+    city_name = city_name.title()
+
     city_predictions = predict_for_city(city_name, model_filename="m.keras")
 
-    conn = get_db_connection()
-    cursor = conn.cursor()
-    
-
-    data = {}
-
-
-    # Initialize variables to store predicted values
     predicted_SO2 = city_predictions['SO2']
     predicted_NO2 = city_predictions['NO2']
     predicted_CO = city_predictions['CO']
     predicted_PM25 = city_predictions['PM2.5']
     predicted_O3 = city_predictions['O3']
-    # Determine the overall AQI
     overall_aqi = max(city_predictions.values())
 
-    data = {
-        'predicted_SO2': city_predictions['SO2'],
-        'predicted_NO2': city_predictions['NO2'],
-        'predicted_CO': city_predictions['CO'],
-        'predicted_PM25': city_predictions['PM2.5'],
-        'predicted_O3': city_predictions['O3'],
-        'overall_aqi': overall_aqi
-    }
+    with open('predictions.csv', 'a', newline='') as file:
+        writer = csv.writer(file)
+        writer.writerow([city_name, predicted_SO2, predicted_NO2, predicted_CO, predicted_PM25, predicted_O3, overall_aqi])
 
-    print(data['predicted_SO2'])
+    print("Predictions saved in the CSV file.")
 
-    cursor.execute('''
-    INSERT INTO predictions (city, SO2, NO2, CO, PM25, O3, overall_aqi)
-    VALUES (?, ?, ?, ?, ?, ?, ?)
-    ''', (city_name, predicted_SO2, predicted_NO2, predicted_CO, predicted_PM25, predicted_O3, overall_aqi))
-    
-    
-    conn.commit()
-    conn.close()
-
-    # Call the predict_for_city function with the user-entered city name
-    
-    print(f"Predicted SO2 for the next hour in {city_name}: {predicted_SO2}")
-    print(f"Predicted NO2 for the next hour in {city_name}: {predicted_NO2}")
-    print(f"Predicted CO for the next hour in {city_name}: {predicted_CO}")
-    print(f"Predicted PM2.5 for the next hour in {city_name}: {predicted_PM25}")
-    print(f"Predicted O3 for the next hour in {city_name}: {predicted_O3}")
-    print(f"\nOverall predicted AQI: {overall_aqi}")
-
-
-    new_predicted_SO2 = city_predictions['SO2']
-    new_predicted_NO2 = city_predictions['NO2']
-    new_predicted_CO = city_predictions['CO']
-    new_predicted_PM25 = city_predictions['PM2.5']
-    new_predicted_O3 = city_predictions['O3']
-    # Determine the overall AQI
-    new_overall_aqi = max(city_predictions.values())
-
-
-    conn = sqlite3.connect('predictions.db')
-    cursor = conn.cursor()
-
-    # Update values for a specific city
-    cursor.execute('''
-        UPDATE predictions
-        SET SO2 = ?, NO2 = ?, CO = ?, PM25 = ?, O3 = ?, overall_aqi = ?
-        WHERE city = ?
-        ''', (new_predicted_SO2, new_predicted_NO2, new_predicted_CO, new_predicted_PM25, new_predicted_O3, new_overall_aqi, city_name))
-
-    conn.commit()
-    conn.close()
-
-    print("Predictions updated in the database.")
-    
-
-    # return "Predictions saved to local variables."
-    return render_template('index.html', data=data)
+    return jsonify({
+        'success': True,  # Optionally, include additional response data
+        'message': 'Data fetched successfully'  # Example message
+    })
 
 @airpol.route('/get_temperature', methods=['POST'])
 def get_temperature():
     city = request.json.get('city')
 
-    # Extracting only the first word of the city name
     first_word = city.split()[0]
 
-    # API call to fetch weather data
+    api_key = '4fb39bf5c97d06c2a97e2884ecc992de'
     weather_url = f'http://api.weatherstack.com/current?access_key={api_key}&query={first_word}'
     response = requests.get(weather_url)
 
@@ -154,5 +78,31 @@ def get_temperature():
         data = response.json()
         temperature = data['current']['temperature']
         return jsonify({'temperature': temperature})
+    else:
+        return jsonify({'error': 'City not found. Please try again.'}), 404
+
+import requests
+from flask import jsonify
+
+@airpol.route('/get_weather', methods=['POST'])
+def get_weather():
+    city = request.json.get('city')
+
+    first_word = city.split()[0]
+
+    api_key = '10048207c054999ff6ea2188e2c65579'
+    weather_url = f'http://api.openweathermap.org/data/2.5/weather?q={first_word}&appid={api_key}&units=metric'
+
+    response = requests.get(weather_url)
+
+    if response.status_code == 200:
+        weather_data = response.json()
+        temperature = weather_data['main']['temp']
+        description = weather_data['weather'][0]['description']
+        weather = {
+            'temperature': temperature,
+            'description': description
+        }
+        return jsonify(weather)
     else:
         return jsonify({'error': 'City not found. Please try again.'}), 404

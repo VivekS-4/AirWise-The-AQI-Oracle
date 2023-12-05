@@ -23,7 +23,7 @@
           <option value="Windsor Downtown">Windsor Downtown</option>
           <!-- Add more options as needed -->
         </select>
-        <input class="datepicker" type="date" id="dpicker">
+        <!-- <input class="datepicker" type="date" id="dpicker"> -->
         <input class="search" type="search" id="search" placeholder="Search"> 
         <button class="fetch" id="fetch">Fetch AQI</button>
     </div>
@@ -42,12 +42,12 @@
         </div>
     </div>
 <!-- <iframe src="{{ url_for('static', filename='html/bg.html') }}" width="100%" height="1000" style="border:none;"></iframe> -->
- 
+<h1>{{data}}</h1>
 <div class="glass" style="border:none;z-index:3">   
     <div class="dashboard">
 
         <div class="box box-1">
-            <h1>🌍 Toronto West</h1>
+            <!-- <h1>🌍<p id='location'>Toronto West</p></h1> -->
             <div class="air-quality-info">
                 <div class="air-quality-level">
                     <p id="haikuElement">
@@ -56,7 +56,7 @@
                     Laughs in every splash.
                     </p>        
                 </div>
-                <div class="pollution-level"></div><br><br>
+                <div class="pollution-level"></div><br><br><br><br><br>
                 <div class="ddate"><label id="ddate">2023-11-17</label></div>
             </div>
         </div>
@@ -67,7 +67,7 @@
                 <div class="weather-icon">🌧️</div>
                 <!-- <button onclick="changeRandomWeatherIconAndTemperature()">Change Icon</button> -->
                 <div id="temp-2" class="temperature">16.5°C</div><br>
-                <div class="location" style="font-size: x-large;">Toronto, ON</div>
+                <div id="location"class="location" style="font-size: x-large;">Toronto, ON</div>
                 
             </div>
         </div>
@@ -89,55 +89,78 @@
         </div>
         <div class="box box-6">
             <h2 style="color: salmon;">Health Care & Precaution</h2><br>
-            <p style="font-size: medium;"><b>For all age groups:</b> Carry umbrellas, wear waterproof clothing, and non-slip footwear to prevent slips and falls.<br><br>
-                <b>For the elderly:</b> Avoid getting soaked in the rain to prevent a sudden drop in body temperature. Keep warm and dry.<br><br>
-                <b>For those with health issues:</b> Those prone to allergies should avoid damp areas, while individuals with joint pain might find warmth or using supportive footwear helpful to avoid slips.</p><br>
-            <!-- <div class="num" style="font-size: larger;">0.053 PPM</div> -->
+            <p style="font-size: medium;">
+                <b id="id_allages">For all age groups:</b>
+                <b id="id_elderly">For the elderly:</b>
+                <b id="id_health_is">For those with health issues:</b>
+            </p><br>
+            
         </div>
         
         <div class="box box-7">
-            <h style="font-size: xx-large; font-weight: bold;">Additional Information</h><br><br>
-            <p style="font-size: x-large; font-family: Ubuntu;" >Good Weather, Great time to get out of your Hibernation!</p>
+            <p id="id_joke" style="font-size: x-large; font-family: Ubuntu;" ></p>
             
         </div>
     </div>
     </div>
+
+    <div class = "pred">
+    
+    <div id="predictionResults" class="predictionResults" style="font-size: x-large; font-weight: bold;">
+        <h style="font-size: xx-large">Additional Information</h>
+        <P></P>
+        <P></P>
+        <P></P>
+        <P></P>
+        <P></P>
+        <P></P>
+    </div>    
+    </div>
 </div>
 
-<!-- <div id="predictionResults">
-    <p id = "overallAQI"></p>
-    <p id = "overallAQI"></p>
-    <p id = "overallAQI"></p>
-    <p id = "overallAQI"></p>
-    <p id = "overallAQI"></p>
-    <p id = "overallAQI"></p>
-    <p id = "overallAQI"></p>
 
-</div> -->
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src='D:/temp/UI/airpol/static/js/sql-wasm.js'></script>
 <script>
-// Assuming yourVariable1 and yourVariable2 contain the new percentage values you want to set for g1 and g2 respectively
-// var yourVariable1 = 20.4; 
-// var yourVariable2; 
 
-// const g1Element = document.querySelector('#g1');
-// const g2Element = document.querySelector('#g2');
+let cityDropdown = document.getElementById('cityDropdown');
+let locationElement = document.getElementById('location');
 
-// g1Element.style.setProperty('--fill-percentage', yourVariable1);
-// g2Element.style.setProperty('--fill-percentage', yourVariable2);
-
-// document.querySelector('#g1 .progress-text').textContent = `${yourVariable1}%`;
-// document.querySelector('#g2 .progress-text').textContent = `${yourVariable2}°C`;
 
 document.getElementById('fetch').addEventListener('click', function() {
     fetchTemperature();
-    fetchWeather()
+    //fetchWeather();
+    updateAQIAdviceFromCSV();
     fetch_main();
-    
+    locationElement.textContent = cityDropdown.value;
 });
 
+//////////////////////////////////////////////////////////////////////////////
+// Get the label element by its ID
+let dateLabel = document.getElementById('ddate');
+
+// Function to format the date as 'YYYY-MM-DD'
+function getFormattedDate() {
+    let today = new Date();
+    let year = today.getFullYear();
+    let month = String(today.getMonth() + 1).padStart(2, '0');
+    let day = String(today.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
+}
+
+// Set the initial date
+dateLabel.textContent = getFormattedDate();
+
+// Update the date label every second (or at the desired interval)
+setInterval(() => {
+    dateLabel.textContent = getFormattedDate();
+}, 1000); // Update the date every second (1000 milliseconds)
+/////////////////////////////////////////////////////////////////////////////
+
+/////////////////////////////////////////////////////////////////////////////
+
+/////////////////////////////////////////////////////////////////////////////
 </script>
 </body>
 </html>
